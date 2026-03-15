@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ImjangLab",
-  description: "ImjangLab",
+  title: "임장연구소",
+  description: "임장연구소",
 };
 
 export default function RootLayout({

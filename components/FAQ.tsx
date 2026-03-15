@@ -75,7 +75,7 @@ export default function FAQ() {
         >
           <p className="text-foreground font-medium mb-1">더 궁금한 점이 있으신가요?</p>
           <p className="text-muted-foreground text-sm mb-4">평균 2시간 내 답변드립니다.</p>
-          <a href="mailto:help@imjanglab.com" className="text-primary text-sm font-medium hover:underline">
+          <a href="mailto:help@imjangyeonguso.com" className="text-primary text-sm font-medium hover:underline">
             1:1 문의하기 →
           </a>
         </motion.div>

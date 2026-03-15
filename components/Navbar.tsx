@@ -30,7 +30,7 @@ export default function Navbar() {
     >
       <div className="container mx-auto flex items-center justify-between py-4">
         <a href="#" className="text-xl font-bold text-foreground">
-          임장<span className="text-primary">랩</span>
+          임장<span className="text-primary">연구소</span>
         </a>
 
         <nav className="hidden md:flex items-center gap-6">

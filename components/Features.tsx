@@ -40,7 +40,7 @@ export default function Features() {
             임장의 모든 것을 <span className="text-primary">하나로</span>
           </h2>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            임장랩은 현장 리포트, 동영상, 임장 로그를 한 곳에 모아 스마트한 부동산 결정을 돕습니다.
+            임장연구소는 현장 리포트, 동영상, 임장 로그를 한 곳에 모아 스마트한 부동산 결정을 돕습니다.
           </p>
         </motion.div>
 

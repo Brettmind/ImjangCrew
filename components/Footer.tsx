@@ -13,7 +13,7 @@ const Footer = () => (
 
         {[
           { title: '서비스', links: ['임장 지도', '임장 동영상', '임장 리포트', '시세 분석', '매물 알림'] },
-          { title: '회사', links: ['임장랩 소개', '채용 공고', '파트너십', '보도 자료', '블로그'] },
+          { title: '회사', links: ['임장연구소 소개', '채용 공고', '파트너십', '보도 자료', '블로그'] },
           { title: '지원', links: ['고객센터', '이용 가이드', 'FAQ', '공지사항', '1:1 문의'] },
         ].map((col) => (
           <div key={col.title}>
@@ -30,7 +30,7 @@ const Footer = () => (
       </div>
 
       <div className="pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4">
-        <p className="text-muted-foreground text-xs">© 2025 임장랩. All rights reserved.</p>
+        <p className="text-muted-foreground text-xs">© 2025 임장연구소. All rights reserved.</p>
         <div className="flex gap-6">
           {['이용약관', '개인정보처리방침', '쿠키 정책'].map((l) => (
             <a key={l} href="#" className="text-muted-foreground text-xs hover:text-foreground transition-colors">{l}</a>
