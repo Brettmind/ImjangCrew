@@ -1,250 +1,193 @@
-'use client';
+"use client"
 
-import React, { useRef, useEffect } from 'react';
+import type React from "react"
+import { useState, useEffect } from "react"
+import Image from "next/image"
+import { ArrowRight } from "lucide-react"
+import { cn } from "@/lib/utils"
 
-interface HeroProps {
-  trustBadge?: {
-    text: string;
-    icons?: string[];
-  };
-  headline: {
-    line1: string;
-    line2: string;
-  };
-  subtitle: string;
-  buttons?: {
-    primary?: {
-      text: string;
-      onClick?: () => void;
-    };
-    secondary?: {
-      text: string;
-      onClick?: () => void;
-    };
-  };
-  className?: string;
+interface ImageCard {
+  id: string
+  src: string
+  alt: string
+  rotation: number
 }
 
-const defaultShaderSource = `#version 300 es
-/*********
-* made by Matthias Hurrle (@atzedent)
-*/
-precision highp float;
-out vec4 O;
-uniform vec2 resolution;
-uniform float time;
-#define FC gl_FragCoord.xy
-#define T time
-#define R resolution
-#define MN min(R.x,R.y)
-float rnd(vec2 p) {
-  p=fract(p*vec2(12.9898,78.233));
-  p+=dot(p,p+34.56);
-  return fract(p.x*p.y);
+interface ImageCarouselHeroProps {
+  title: string
+  subtitle: string
+  description: string
+  ctaText: string
+  onCtaClick?: () => void
+  images: ImageCard[]
+  features?: Array<{
+    title: string
+    description: string
+  }>
 }
-float noise(in vec2 p) {
-  vec2 i=floor(p), f=fract(p), u=f*f*(3.-2.*f);
-  float
-  a=rnd(i),
-  b=rnd(i+vec2(1,0)),
-  c=rnd(i+vec2(0,1)),
-  d=rnd(i+1.);
-  return mix(mix(a,b,u.x),mix(c,d,u.x),u.y);
-}
-float fbm(vec2 p) {
-  float t=.0, a=1.; mat2 m=mat2(1.,-.5,.2,1.2);
-  for (int i=0; i<5; i++) {
-    t+=a*noise(p);
-    p*=2.*m;
-    a*=.5;
-  }
-  return t;
-}
-float clouds(vec2 p) {
-    float d=1., t=.0;
-    for (float i=.0; i<3.; i++) {
-        float a=d*fbm(i*10.+p.x*.2+.2*(1.+i)*p.y+d+i*i+p);
-        t=mix(t,d,a);
-        d=a;
-        p*=2./(i+1.);
-    }
-    return t;
-}
-void main(void) {
-    vec2 uv=(FC-.5*R)/MN,st=uv*vec2(2,1);
-    vec3 col=vec3(0);
-    float bg=clouds(vec2(st.x+T*.5,-st.y));
-    uv*=1.-.3*(sin(T*.2)*.5+.5);
-    for (float i=1.; i<12.; i++) {
-        uv+=.1*cos(i*vec2(.1+.01*i, .8)+i*i+T*.5+.1*uv.x);
-        vec2 p=uv;
-        float d=length(p);
-        col+=.00125/d*(cos(sin(i)*vec3(1,2,3))+1.);
-        float b=noise(i+p+bg*1.731);
-        col+=.002*b/length(max(p,vec2(b*p.x*.02,p.y)));
-        col=mix(col,vec3(bg*.25,bg*.137,bg*.05),d);
-    }
-    O=vec4(col,1);
-}`;
 
-const useShaderBackground = () => {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const animationFrameRef = useRef<number | undefined>(undefined);
+export function ImageCarouselHero({
+  title,
+  subtitle,
+  description,
+  ctaText,
+  onCtaClick,
+  images,
+  features = [
+    {
+      title: "Realistic Results",
+      description: "Realistic Results Photos that look professionally crafted",
+    },
+    {
+      title: "Fast Generation",
+      description: "Turn ideas into images in seconds.",
+    },
+    {
+      title: "Diverse Styles",
+      description: "Choose from a wide range of artistic options.",
+    },
+  ],
+}: ImageCarouselHeroProps) {
+  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+  const [isHovering, setIsHovering] = useState(false)
+  const [rotatingCards, setRotatingCards] = useState<number[]>([])
 
+  // Continuous rotation animation
   useEffect(() => {
-    if (!canvasRef.current) return;
-    const canvas = canvasRef.current;
-    const gl = canvas.getContext('webgl2');
-    if (!gl) return;
+    const interval = setInterval(() => {
+      setRotatingCards((prev) => prev.map((_, i) => (prev[i] + 0.5) % 360))
+    }, 50)
 
-    const dpr = Math.max(1, 0.5 * window.devicePixelRatio);
-    canvas.width = window.innerWidth * dpr;
-    canvas.height = window.innerHeight * dpr;
-    gl.viewport(0, 0, canvas.width, canvas.height);
+    return () => clearInterval(interval)
+  }, [])
 
-    const vertexSrc = `#version 300 es
-precision highp float;
-in vec4 position;
-void main(){gl_Position=position;}`;
+  // Initialize rotating cards
+  useEffect(() => {
+    setRotatingCards(images.map((_, i) => i * (360 / images.length)))
+  }, [images.length])
 
-    const vs = gl.createShader(gl.VERTEX_SHADER)!;
-    gl.shaderSource(vs, vertexSrc);
-    gl.compileShader(vs);
-
-    const fs = gl.createShader(gl.FRAGMENT_SHADER)!;
-    gl.shaderSource(fs, defaultShaderSource);
-    gl.compileShader(fs);
-
-    const program = gl.createProgram()!;
-    gl.attachShader(program, vs);
-    gl.attachShader(program, fs);
-    gl.linkProgram(program);
-
-    const buffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, 1, -1, -1, 1, 1, 1, -1]), gl.STATIC_DRAW);
-
-    const position = gl.getAttribLocation(program, 'position');
-    gl.enableVertexAttribArray(position);
-    gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
-
-    const uResolution = gl.getUniformLocation(program, 'resolution');
-    const uTime = gl.getUniformLocation(program, 'time');
-
-    const render = (now: number) => {
-      gl.clearColor(0, 0, 0, 1);
-      gl.clear(gl.COLOR_BUFFER_BIT);
-      gl.useProgram(program);
-      gl.uniform2f(uResolution, canvas.width, canvas.height);
-      gl.uniform1f(uTime, now * 1e-3);
-      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-      animationFrameRef.current = requestAnimationFrame(render);
-    };
-
-    animationFrameRef.current = requestAnimationFrame(render);
-
-    const onResize = () => {
-      const newDpr = Math.max(1, 0.5 * window.devicePixelRatio);
-      canvas.width = window.innerWidth * newDpr;
-      canvas.height = window.innerHeight * newDpr;
-      gl.viewport(0, 0, canvas.width, canvas.height);
-    };
-    window.addEventListener('resize', onResize);
-
-    return () => {
-      window.removeEventListener('resize', onResize);
-      if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
-      gl.deleteProgram(program);
-    };
-  }, []);
-
-  return canvasRef;
-};
-
-const Hero: React.FC<HeroProps> = ({ trustBadge, headline, subtitle, buttons, className = '' }) => {
-  const canvasRef = useShaderBackground();
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect()
+    setMousePosition({
+      x: (e.clientX - rect.left) / rect.width,
+      y: (e.clientY - rect.top) / rect.height,
+    })
+  }
 
   return (
-    <div className={`relative w-full h-screen overflow-hidden bg-black ${className}`}>
-      <style>{`
-        @keyframes fade-in-down {
-          from { opacity: 0; transform: translateY(-20px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes fade-in-up {
-          from { opacity: 0; transform: translateY(30px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        .animate-fade-in-down { animation: fade-in-down 0.8s ease-out forwards; }
-        .animate-fade-in-up { animation: fade-in-up 0.8s ease-out forwards; opacity: 0; }
-        .delay-200 { animation-delay: 0.2s; }
-        .delay-400 { animation-delay: 0.4s; }
-        .delay-600 { animation-delay: 0.6s; }
-        .delay-800 { animation-delay: 0.8s; }
-      `}</style>
+    <div className="relative w-full min-h-screen bg-gradient-to-b from-background via-background to-background overflow-hidden">
+      {/* Animated background gradient */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-primary/5 to-transparent rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-gradient-to-tr from-primary/5 to-transparent rounded-full blur-3xl animate-pulse" />
+      </div>
 
-      <canvas
-        ref={canvasRef}
-        className="absolute inset-0 w-full h-full touch-none"
-        style={{ background: 'black' }}
-      />
+      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 sm:px-6 lg:px-8">
+        {/* Carousel Container */}
+        <div
+          className="relative w-full max-w-6xl h-96 sm:h-[500px] mb-12 sm:mb-16"
+          onMouseMove={handleMouseMove}
+          onMouseEnter={() => setIsHovering(true)}
+          onMouseLeave={() => setIsHovering(false)}
+        >
+          {/* Rotating Image Cards */}
+          <div className="absolute inset-0 flex items-center justify-center perspective">
+            {images.map((image, index) => {
+              const angle = (rotatingCards[index] || 0) * (Math.PI / 180)
+              const radius = 180
+              const x = Math.cos(angle) * radius
+              const y = Math.sin(angle) * radius
 
-      <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-white">
-        {trustBadge && (
-          <div className="mb-8 animate-fade-in-down">
-            <div className="flex items-center gap-2 px-4 py-2 sm:px-6 sm:py-3 bg-orange-500/10 backdrop-blur-md border border-orange-300/30 rounded-full text-xs sm:text-sm">
-              {trustBadge.icons && (
-                <div className="flex gap-1">
-                  {trustBadge.icons.map((icon, i) => (
-                    <span key={i}>{icon}</span>
-                  ))}
+              // 3D perspective effect based on mouse position
+              const perspectiveX = (mousePosition.x - 0.5) * 20
+              const perspectiveY = (mousePosition.y - 0.5) * 20
+
+              return (
+                <div
+                  key={image.id}
+                  className="absolute w-32 h-40 sm:w-40 sm:h-48 transition-all duration-300"
+                  style={{
+                    transform: `
+                      translate(${x}px, ${y}px)
+                      rotateX(${perspectiveY}deg)
+                      rotateY(${perspectiveX}deg)
+                      rotateZ(${image.rotation}deg)
+                    `,
+                    transformStyle: "preserve-3d",
+                  }}
+                >
+                  <div
+                    className={cn(
+                      "relative w-full h-full rounded-2xl overflow-hidden shadow-2xl",
+                      "transition-all duration-300 hover:shadow-3xl hover:scale-110",
+                      "cursor-pointer group",
+                    )}
+                    style={{
+                      transformStyle: "preserve-3d",
+                    }}
+                  >
+                    <Image
+                      src={image.src || "/placeholder.svg"}
+                      alt={image.alt}
+                      fill
+                      className="object-cover group-hover:scale-110 transition-transform duration-500"
+                      priority={index < 3}
+                    />
+                    {/* Shine effect */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  </div>
                 </div>
+              )
+            })}
+          </div>
+        </div>
+
+        {/* Content Section */}
+        <div className="relative z-20 text-center max-w-2xl mx-auto mb-12 sm:mb-16">
+          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-serif font-bold text-foreground mb-4 sm:mb-6 text-balance leading-tight">
+            {title}
+          </h1>
+
+          <p className="text-lg sm:text-xl text-muted-foreground mb-8 text-balance">{description}</p>
+
+          {/* CTA Button */}
+          <button
+            onClick={onCtaClick}
+            className={cn(
+              "inline-flex items-center gap-2 px-8 py-3 rounded-full",
+              "bg-primary text-primary-foreground font-medium",
+              "hover:shadow-lg hover:scale-105 transition-all duration-300",
+              "active:scale-95 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2",
+              "group",
+            )}
+          >
+            {ctaText}
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          </button>
+        </div>
+
+        {/* Features Section */}
+        <div className="relative z-20 w-full max-w-4xl grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-8 mt-12 sm:mt-16">
+          {features.map((feature, index) => (
+            <div
+              key={index}
+              className={cn(
+                "text-center p-6 rounded-xl",
+                "bg-card/50 backdrop-blur-sm border border-border/50",
+                "hover:bg-card/80 hover:border-border transition-all duration-300",
+                "group",
               )}
-              <span className="text-orange-100">{trustBadge.text}</span>
+            >
+              <h3 className="text-lg sm:text-xl font-semibold text-foreground mb-2 group-hover:text-primary transition-colors">
+                {feature.title}
+              </h3>
+              <p className="text-sm sm:text-base text-muted-foreground">{feature.description}</p>
             </div>
-          </div>
-        )}
-
-        <div className="text-center space-y-6 max-w-5xl mx-auto px-4">
-          <div className="space-y-2">
-            <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold leading-tight bg-gradient-to-r from-orange-300 via-yellow-400 to-amber-300 bg-clip-text text-transparent animate-fade-in-up delay-200">
-              {headline.line1}
-            </h1>
-            <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold leading-tight bg-gradient-to-r from-yellow-300 via-orange-400 to-red-400 bg-clip-text text-transparent animate-fade-in-up delay-400">
-              {headline.line2}
-            </h1>
-          </div>
-
-          <div className="max-w-3xl mx-auto animate-fade-in-up delay-600">
-            <p className="text-lg md:text-xl lg:text-2xl text-orange-100/90 font-light leading-relaxed">
-              {subtitle}
-            </p>
-          </div>
-
-          {buttons && (
-            <div className="flex flex-col sm:flex-row gap-4 justify-center mt-10 animate-fade-in-up delay-800">
-              {buttons.primary && (
-                <button
-                  onClick={buttons.primary.onClick}
-                  className="px-8 py-4 bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-black rounded-full font-semibold text-lg transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-orange-500/25"
-                >
-                  {buttons.primary.text}
-                </button>
-              )}
-              {buttons.secondary && (
-                <button
-                  onClick={buttons.secondary.onClick}
-                  className="px-8 py-4 bg-orange-500/10 hover:bg-orange-500/20 border border-orange-300/30 hover:border-orange-300/50 text-orange-100 rounded-full font-semibold text-lg transition-all duration-300 hover:scale-105 backdrop-blur-sm"
-                >
-                  {buttons.secondary.text}
-                </button>
-              )}
-            </div>
-          )}
+          ))}
         </div>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default Hero;
+export default ImageCarouselHero
