@@ -5,10 +5,10 @@ const Footer = () => (
         {/* Brand */}
         <div className="sm:col-span-2">
           <div className="text-2xl font-bold bg-gradient-to-r from-orange-400 to-yellow-400 bg-clip-text text-transparent mb-3">
-            임장크루
+            임장랩
           </div>
           <p className="text-orange-100/40 text-sm leading-relaxed max-w-xs">
-            발품을 팔면 기회가 보입니다. 전국의 크루원들과 함께 현장 중심 부동산 투자를 경험하세요.
+            발품을 팔면 기회가 보입니다. 전국의 멤버들과 함께 현장 중심 부동산 투자를 경험하세요.
           </p>
           <div className="flex gap-3 mt-5">
             {['📱', '💻', '🔔'].map((icon, i) => (
@@ -34,7 +34,7 @@ const Footer = () => (
         <div>
           <h4 className="text-white font-semibold text-sm mb-4">회사</h4>
           <ul className="space-y-2.5">
-            {['임장크루 소개', '채용 공고', '파트너십', '보도 자료', '블로그'].map((l) => (
+            {['임장랩 소개', '채용 공고', '파트너십', '보도 자료', '블로그'].map((l) => (
               <li key={l}>
                 <a href="#" className="text-orange-100/40 text-sm hover:text-orange-300 transition-colors">{l}</a>
               </li>
@@ -56,7 +56,7 @@ const Footer = () => (
 
       <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row items-center justify-between gap-4">
         <p className="text-orange-100/30 text-xs">
-          © 2025 임장크루. All rights reserved.
+          © 2025 임장랩. All rights reserved.
         </p>
         <div className="flex gap-6">
           {['이용약관', '개인정보처리방침', '쿠키 정책'].map((l) => (

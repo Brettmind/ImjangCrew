@@ -21,12 +21,12 @@ export default function Home() {
         }}
         headline={{
           line1: '임장의 모든 것,',
-          line2: 'Imjang Crew',
+          line2: 'ImjangLab',
         }}
-        subtitle="발품 팔아야 진짜 정보가 보입니다. 임장 크루와 함께 현장을 직접 확인하고 스마트한 부동산 결정을 내리세요."
+        subtitle="발품 팔아야 진짜 정보가 보입니다. 임장랩과 함께 현장을 직접 확인하고 스마트한 부동산 결정을 내리세요."
         buttons={{
-          primary: { text: '무료로 크루 합류하기' },
-          secondary: { text: '크루 둘러보기' },
+          primary: { text: '무료로 랩 합류하기' },
+          secondary: { text: '임장랩 둘러보기' },
         }}
       />
       <Stats />

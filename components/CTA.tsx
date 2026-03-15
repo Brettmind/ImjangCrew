@@ -16,7 +16,7 @@ const CTA = () => (
             </span>
           </h2>
           <p className="text-orange-100/60 text-lg mb-10 max-w-xl mx-auto">
-            38,000명의 크루원이 오늘도 현장을 직접 발로 뛰고 있습니다. 지금 합류하면 30일 무료입니다.
+            38,000명의 멤버가 오늘도 현장을 직접 발로 뛰고 있습니다. 지금 합류하면 30일 무료입니다.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">

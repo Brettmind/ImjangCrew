@@ -5,7 +5,7 @@ import { useState } from 'react';
 const faqs = [
   {
     q: '임장 경험이 전혀 없어도 괜찮을까요?',
-    a: '물론입니다. 임장크루는 초보자를 위한 단계별 가이드와 체크리스트를 제공합니다. 선배 크루원의 임장 노트를 먼저 읽으며 감각을 익히고, 함께 임장에 참여하면서 자연스럽게 배울 수 있습니다.',
+    a: '물론입니다. 임장랩은 초보자를 위한 단계별 가이드와 체크리스트를 제공합니다. 선배 멤버의 임장 노트를 먼저 읽으며 감각을 익히고, 함께 임장에 참여하면서 자연스럽게 배울 수 있습니다.',
   },
   {
     q: '임장 노트는 어떻게 공유되나요?',
@@ -72,7 +72,7 @@ const FAQ = () => {
           <p className="text-white font-medium mb-2">더 궁금한 점이 있으신가요?</p>
           <p className="text-orange-100/50 text-sm mb-4">평균 2시간 내 답변드립니다.</p>
           <a
-            href="mailto:help@imjangcrew.com"
+            href="mailto:help@imjanglab.com"
             className="inline-block px-6 py-2.5 border border-orange-500/30 text-orange-400 rounded-full text-sm hover:bg-orange-500/10 transition-all"
           >
             1:1 문의하기 →

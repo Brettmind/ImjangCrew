@@ -1,5 +1,5 @@
 const stats = [
-  { value: '38,400+', label: '누적 크루원', icon: '👥' },
+  { value: '38,400+', label: '누적 멤버', icon: '👥' },
   { value: '124,000+', label: '임장 노트', icon: '📝' },
   { value: '97개', label: '커버 지역', icon: '📍' },
   { value: '4.9점', label: '평균 만족도', icon: '⭐' },

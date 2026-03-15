@@ -66,7 +66,7 @@ const Areas = () => (
           전국 <span className="bg-gradient-to-r from-orange-400 to-yellow-400 bg-clip-text text-transparent">임장 현황</span>
         </h2>
         <p className="text-orange-100/60 text-lg max-w-2xl mx-auto">
-          지금 이 순간도 크루원들이 전국 곳곳을 발로 뛰고 있습니다.
+          지금 이 순간도 멤버들이 전국 곳곳을 발로 뛰고 있습니다.
         </p>
       </div>
 
