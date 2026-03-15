@@ -26,23 +26,23 @@ const steps = [
 ];
 
 const HowItWorks = () => (
-  <section id="how" className="bg-neutral-950 py-24 px-6">
+  <section id="how" className="bg-card/20 py-24 px-6">
     <div className="max-w-7xl mx-auto">
       <div className="text-center mb-16">
-        <span className="inline-block px-4 py-1.5 bg-orange-500/10 border border-orange-400/20 rounded-full text-orange-400 text-sm font-medium mb-4">
+        <span className="inline-block px-4 py-1.5 bg-card border border-border text-primary text-sm font-medium rounded-full mb-4">
           이용 방법
         </span>
-        <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+        <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
           4단계로 <span className="bg-gradient-to-r from-orange-400 to-yellow-400 bg-clip-text text-transparent">완성하는 임장</span>
         </h2>
-        <p className="text-orange-100/60 text-lg max-w-2xl mx-auto">
+        <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
           처음 임장이어도 괜찮습니다. 단계별로 안내해드립니다.
         </p>
       </div>
 
       <div className="relative">
         {/* connector line */}
-        <div className="hidden lg:block absolute top-16 left-0 right-0 h-px bg-gradient-to-r from-transparent via-orange-500/30 to-transparent" />
+        <div className="hidden lg:block absolute top-16 left-0 right-0 h-px bg-gradient-to-r from-transparent via-border to-transparent" />
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {steps.map((s, i) => (
@@ -50,12 +50,12 @@ const HowItWorks = () => (
               <div className="relative z-10 w-14 h-14 rounded-2xl bg-gradient-to-br from-orange-500 to-yellow-500 flex items-center justify-center text-2xl mb-5 shadow-lg shadow-orange-500/20">
                 {s.icon}
               </div>
-              <span className="text-orange-500/40 text-xs font-mono font-bold mb-2 tracking-widest">{s.number}</span>
-              <h3 className="text-white font-semibold text-lg mb-3">{s.title}</h3>
-              <p className="text-orange-100/50 text-sm leading-relaxed">{s.desc}</p>
+              <span className="text-primary/40 text-xs font-mono font-bold mb-2 tracking-widest">{s.number}</span>
+              <h3 className="text-foreground font-semibold text-lg mb-3">{s.title}</h3>
+              <p className="text-muted-foreground text-sm leading-relaxed">{s.desc}</p>
 
               {i < steps.length - 1 && (
-                <div className="lg:hidden w-px h-8 bg-orange-500/20 my-4" />
+                <div className="lg:hidden w-px h-8 bg-border/50 my-4" />
               )}
             </div>
           ))}

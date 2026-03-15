@@ -32,16 +32,16 @@ const features = [
 ];
 
 const Features = () => (
-  <section id="features" className="bg-black py-24 px-6">
+  <section id="features" className="bg-background py-24 px-6">
     <div className="max-w-7xl mx-auto">
       <div className="text-center mb-16">
-        <span className="inline-block px-4 py-1.5 bg-orange-500/10 border border-orange-400/20 rounded-full text-orange-400 text-sm font-medium mb-4">
+        <span className="inline-block px-4 py-1.5 bg-card border border-border text-primary text-sm font-medium rounded-full mb-4">
           서비스 소개
         </span>
-        <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+        <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
           임장을 <span className="bg-gradient-to-r from-orange-400 to-yellow-400 bg-clip-text text-transparent">스마트하게</span>
         </h2>
-        <p className="text-orange-100/60 text-lg max-w-2xl mx-auto">
+        <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
           임장랩은 현장 중심 부동산 투자를 위한 모든 도구를 하나로 모았습니다.
         </p>
       </div>
@@ -50,13 +50,13 @@ const Features = () => (
         {features.map((f) => (
           <div
             key={f.title}
-            className="group p-8 rounded-2xl border border-orange-500/10 bg-orange-500/5 hover:bg-orange-500/10 hover:border-orange-500/30 transition-all duration-300"
+            className="group p-8 rounded-2xl border border-border/50 bg-card/50 hover:bg-card/80 hover:border-border transition-all duration-300"
           >
             <div className="text-4xl mb-4">{f.icon}</div>
-            <h3 className="text-white font-semibold text-lg mb-3 group-hover:text-orange-300 transition-colors">
+            <h3 className="text-foreground font-semibold text-lg mb-3 group-hover:text-primary transition-colors">
               {f.title}
             </h3>
-            <p className="text-orange-100/50 text-sm leading-relaxed">{f.desc}</p>
+            <p className="text-muted-foreground text-sm leading-relaxed">{f.desc}</p>
           </div>
         ))}
       </div>

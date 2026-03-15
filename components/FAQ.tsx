@@ -33,13 +33,13 @@ const FAQ = () => {
   const [open, setOpen] = useState<number | null>(null);
 
   return (
-    <section id="faq" className="bg-neutral-950 py-24 px-6">
+    <section id="faq" className="bg-card/20 py-24 px-6">
       <div className="max-w-3xl mx-auto">
         <div className="text-center mb-16">
-          <span className="inline-block px-4 py-1.5 bg-orange-500/10 border border-orange-400/20 rounded-full text-orange-400 text-sm font-medium mb-4">
+          <span className="inline-block px-4 py-1.5 bg-card border border-border text-primary text-sm font-medium rounded-full mb-4">
             자주 묻는 질문
           </span>
-          <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+          <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
             궁금한 점이 <span className="bg-gradient-to-r from-orange-400 to-yellow-400 bg-clip-text text-transparent">있으신가요?</span>
           </h2>
         </div>
@@ -48,32 +48,32 @@ const FAQ = () => {
           {faqs.map((f, i) => (
             <div
               key={i}
-              className="border border-orange-500/10 rounded-xl overflow-hidden bg-orange-500/5"
+              className="border border-border/50 rounded-xl overflow-hidden bg-card/50"
             >
               <button
                 onClick={() => setOpen(open === i ? null : i)}
-                className="w-full px-6 py-5 text-left flex items-center justify-between gap-4 hover:bg-orange-500/5 transition-colors"
+                className="w-full px-6 py-5 text-left flex items-center justify-between gap-4 hover:bg-card/80 transition-colors"
               >
-                <span className="text-white font-medium text-sm">{f.q}</span>
-                <span className={`text-orange-400 flex-shrink-0 transition-transform duration-200 ${open === i ? 'rotate-45' : ''}`}>
+                <span className="text-foreground font-medium text-sm">{f.q}</span>
+                <span className={`text-primary flex-shrink-0 transition-transform duration-200 ${open === i ? 'rotate-45' : ''}`}>
                   +
                 </span>
               </button>
               {open === i && (
                 <div className="px-6 pb-5">
-                  <p className="text-orange-100/60 text-sm leading-relaxed">{f.a}</p>
+                  <p className="text-muted-foreground text-sm leading-relaxed">{f.a}</p>
                 </div>
               )}
             </div>
           ))}
         </div>
 
-        <div className="text-center mt-12 p-8 rounded-2xl border border-orange-500/10 bg-orange-500/5">
-          <p className="text-white font-medium mb-2">더 궁금한 점이 있으신가요?</p>
-          <p className="text-orange-100/50 text-sm mb-4">평균 2시간 내 답변드립니다.</p>
+        <div className="text-center mt-12 p-8 rounded-2xl border border-border/50 bg-card/50 backdrop-blur-sm">
+          <p className="text-foreground font-medium mb-2">더 궁금한 점이 있으신가요?</p>
+          <p className="text-muted-foreground text-sm mb-4">평균 2시간 내 답변드립니다.</p>
           <a
             href="mailto:help@imjanglab.com"
-            className="inline-block px-6 py-2.5 border border-orange-500/30 text-orange-400 rounded-full text-sm hover:bg-orange-500/10 transition-all"
+            className="inline-block px-6 py-2.5 border border-border text-primary rounded-full text-sm hover:bg-card/80 transition-all"
           >
             1:1 문의하기 →
           </a>

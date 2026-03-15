@@ -24,7 +24,7 @@ const Navbar = () => {
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? 'bg-black/80 backdrop-blur-md border-b border-orange-500/10' : 'bg-transparent'
+        scrolled ? 'bg-background/80 backdrop-blur-md border-b border-border/50' : 'bg-transparent'
       }`}
     >
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -35,26 +35,26 @@ const Navbar = () => {
         {/* Desktop */}
         <div className="hidden md:flex items-center gap-8">
           {links.map((l) => (
-            <a key={l.href} href={l.href} className="text-sm text-orange-100/70 hover:text-orange-300 transition-colors">
+            <a key={l.href} href={l.href} className="text-sm text-muted-foreground hover:text-primary transition-colors">
               {l.label}
             </a>
           ))}
         </div>
 
         <div className="hidden md:flex items-center gap-3">
-          <a href="#" className="text-sm text-orange-100/70 hover:text-orange-300 transition-colors px-4 py-2">
+          <a href="#" className="text-sm text-muted-foreground hover:text-primary transition-colors px-4 py-2">
             로그인
           </a>
           <a
             href="#pricing"
-            className="text-sm px-5 py-2 bg-gradient-to-r from-orange-500 to-yellow-500 text-black font-semibold rounded-full hover:from-orange-600 hover:to-yellow-600 transition-all"
+            className="text-sm px-5 py-2 bg-primary text-primary-foreground font-semibold rounded-full hover:opacity-90 transition-all"
           >
             무료 시작
           </a>
         </div>
 
         {/* Mobile hamburger */}
-        <button className="md:hidden text-orange-100" onClick={() => setMenuOpen(!menuOpen)}>
+        <button className="md:hidden text-foreground" onClick={() => setMenuOpen(!menuOpen)}>
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             {menuOpen
               ? <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -64,15 +64,15 @@ const Navbar = () => {
       </div>
 
       {menuOpen && (
-        <div className="md:hidden bg-black/95 border-t border-orange-500/10 px-6 py-4 flex flex-col gap-4">
+        <div className="md:hidden bg-background/95 border-t border-border/50 px-6 py-4 flex flex-col gap-4">
           {links.map((l) => (
-            <a key={l.href} href={l.href} className="text-orange-100/80 hover:text-orange-300 text-sm" onClick={() => setMenuOpen(false)}>
+            <a key={l.href} href={l.href} className="text-muted-foreground hover:text-primary text-sm" onClick={() => setMenuOpen(false)}>
               {l.label}
             </a>
           ))}
           <a
             href="#pricing"
-            className="mt-2 text-center text-sm px-5 py-2 bg-gradient-to-r from-orange-500 to-yellow-500 text-black font-semibold rounded-full"
+            className="mt-2 text-center text-sm px-5 py-2 bg-primary text-primary-foreground font-semibold rounded-full"
             onClick={() => setMenuOpen(false)}
           >
             무료 시작

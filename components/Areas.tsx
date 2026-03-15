@@ -56,16 +56,16 @@ const areas = [
 ];
 
 const Areas = () => (
-  <section id="areas" className="bg-black py-24 px-6">
+  <section id="areas" className="bg-background py-24 px-6">
     <div className="max-w-7xl mx-auto">
       <div className="text-center mb-16">
-        <span className="inline-block px-4 py-1.5 bg-orange-500/10 border border-orange-400/20 rounded-full text-orange-400 text-sm font-medium mb-4">
+        <span className="inline-block px-4 py-1.5 bg-card border border-border text-primary text-sm font-medium rounded-full mb-4">
           임장 지역
         </span>
-        <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+        <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
           전국 <span className="bg-gradient-to-r from-orange-400 to-yellow-400 bg-clip-text text-transparent">임장 현황</span>
         </h2>
-        <p className="text-orange-100/60 text-lg max-w-2xl mx-auto">
+        <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
           지금 이 순간도 멤버들이 전국 곳곳을 발로 뛰고 있습니다.
         </p>
       </div>
@@ -74,16 +74,16 @@ const Areas = () => (
         {areas.map((a) => (
           <div
             key={a.region}
-            className="group relative p-6 rounded-2xl border border-orange-500/10 bg-orange-500/5 hover:border-orange-500/30 hover:bg-orange-500/10 transition-all duration-300 cursor-pointer"
+            className="group relative p-6 rounded-2xl border border-border/50 bg-card/50 hover:border-border hover:bg-card/80 transition-all duration-300 cursor-pointer"
           >
             {a.hot && (
-              <span className="absolute top-4 right-4 px-2.5 py-0.5 bg-orange-500 text-black text-xs font-bold rounded-full">
+              <span className="absolute top-4 right-4 px-2.5 py-0.5 bg-primary text-primary-foreground text-xs font-bold rounded-full">
                 🔥 HOT
               </span>
             )}
 
             <div className="flex items-baseline gap-3 mb-4">
-              <h3 className="text-2xl font-bold text-white">{a.region}</h3>
+              <h3 className="text-2xl font-bold text-foreground">{a.region}</h3>
               <span className={`text-sm font-semibold ${a.trend.startsWith('+') ? 'text-green-400' : 'text-red-400'}`}>
                 {a.trend}
               </span>
@@ -91,7 +91,7 @@ const Areas = () => (
 
             <div className="flex flex-wrap gap-1.5 mb-4">
               {a.districts.map((d) => (
-                <span key={d} className="text-xs px-2 py-1 bg-white/5 border border-white/10 rounded-md text-orange-100/60">
+                <span key={d} className="text-xs px-2 py-1 bg-card/50 border border-border/50 rounded-md text-muted-foreground">
                   {d}
                 </span>
               ))}
@@ -99,25 +99,25 @@ const Areas = () => (
 
             <div className="flex items-center justify-between mb-4">
               <div>
-                <p className="text-orange-100/40 text-xs mb-0.5">가격대</p>
-                <p className="text-orange-200 text-sm font-medium">{a.priceRange}</p>
+                <p className="text-muted-foreground/60 text-xs mb-0.5">가격대</p>
+                <p className="text-foreground text-sm font-medium">{a.priceRange}</p>
               </div>
               <div className="text-right">
-                <p className="text-orange-100/40 text-xs mb-0.5">임장 노트</p>
-                <p className="text-orange-200 text-sm font-medium">{a.count.toLocaleString()}개</p>
+                <p className="text-muted-foreground/60 text-xs mb-0.5">임장 노트</p>
+                <p className="text-foreground text-sm font-medium">{a.count.toLocaleString()}개</p>
               </div>
             </div>
 
             <div className="flex gap-2 flex-wrap">
               {a.tags.map((t) => (
-                <span key={t} className="text-xs px-2.5 py-1 bg-orange-500/10 border border-orange-400/20 text-orange-400 rounded-full">
+                <span key={t} className="text-xs px-2.5 py-1 bg-card border border-border text-primary rounded-full">
                   #{t}
                 </span>
               ))}
             </div>
 
-            <div className="mt-4 pt-4 border-t border-white/5">
-              <span className="text-orange-400 text-sm group-hover:text-orange-300 transition-colors">
+            <div className="mt-4 pt-4 border-t border-border/50">
+              <span className="text-primary text-sm group-hover:text-primary transition-colors">
                 임장 노트 보기 →
               </span>
             </div>
@@ -126,7 +126,7 @@ const Areas = () => (
       </div>
 
       <div className="text-center mt-10">
-        <button className="px-8 py-3 border border-orange-500/30 text-orange-400 rounded-full text-sm hover:bg-orange-500/10 transition-all">
+        <button className="px-8 py-3 border border-border text-primary rounded-full text-sm hover:bg-card/80 transition-all">
           전체 지역 보기
         </button>
       </div>

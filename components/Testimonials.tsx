@@ -38,45 +38,45 @@ const reviews = [
 ];
 
 const Testimonials = () => (
-  <section id="testimonials" className="bg-neutral-950 py-24 px-6">
+  <section id="testimonials" className="bg-card/20 py-24 px-6">
     <div className="max-w-7xl mx-auto">
       <div className="text-center mb-16">
-        <span className="inline-block px-4 py-1.5 bg-orange-500/10 border border-orange-400/20 rounded-full text-orange-400 text-sm font-medium mb-4">
+        <span className="inline-block px-4 py-1.5 bg-card border border-border text-primary text-sm font-medium rounded-full mb-4">
           크루 후기
         </span>
-        <h2 className="text-4xl md:text-5xl font-bold text-white mb-4">
+        <h2 className="text-4xl md:text-5xl font-bold text-foreground mb-4">
           실제 멤버들의 <span className="bg-gradient-to-r from-orange-400 to-yellow-400 bg-clip-text text-transparent">성공 스토리</span>
         </h2>
-        <p className="text-orange-100/60 text-lg max-w-2xl mx-auto">
+        <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
           발품을 팔면 반드시 기회가 보입니다.
         </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {reviews.map((r) => (
-          <div key={r.name} className="p-8 rounded-2xl border border-orange-500/10 bg-orange-500/5 flex flex-col gap-4">
+          <div key={r.name} className="p-8 rounded-2xl border border-border/50 bg-card/50 backdrop-blur-sm flex flex-col gap-4">
             <div className="flex items-center gap-1">
               {Array.from({ length: r.rating }).map((_, i) => (
                 <span key={i} className="text-yellow-400 text-sm">★</span>
               ))}
             </div>
 
-            <p className="text-orange-100/70 leading-relaxed text-sm flex-1">
+            <p className="text-muted-foreground leading-relaxed text-sm flex-1">
               &ldquo;{r.text}&rdquo;
             </p>
 
-            <div className="pt-4 border-t border-white/5 flex items-center justify-between">
+            <div className="pt-4 border-t border-border/50 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-orange-500/20 flex items-center justify-center text-xl">
+                <div className="w-10 h-10 rounded-full bg-card flex items-center justify-center text-xl">
                   {r.avatar}
                 </div>
                 <div>
-                  <p className="text-white font-medium text-sm">{r.name}</p>
-                  <p className="text-orange-100/40 text-xs">{r.title}</p>
+                  <p className="text-foreground font-medium text-sm">{r.name}</p>
+                  <p className="text-muted-foreground/60 text-xs">{r.title}</p>
                 </div>
               </div>
               <div className="text-right">
-                <p className="text-orange-100/40 text-xs mb-0.5">{r.property}</p>
+                <p className="text-muted-foreground/60 text-xs mb-0.5">{r.property}</p>
                 <p className="text-green-400 text-sm font-bold">{r.gain}</p>
               </div>
             </div>
