@@ -3,11 +3,12 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '@/components/ui/button';
+import { useAuth } from '@/lib/auth-context';
+import Link from 'next/link';
 
 const links = [
   { label: '서비스', href: '#features' },
   { label: '이용방법', href: '#how' },
-  { label: '지역', href: '#areas' },
   { label: '후기', href: '#testimonials' },
   { label: '가격', href: '#pricing' },
 ];
@@ -15,6 +16,8 @@ const links = [
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const { user, signOut, loading } = useAuth();
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 20);
@@ -29,9 +32,9 @@ export default function Navbar() {
       }`}
     >
       <div className="container mx-auto flex items-center justify-between py-4">
-        <a href="#" className="text-xl font-bold text-foreground">
+        <Link href="/" className="text-xl font-bold text-foreground">
           임장<span className="text-primary">연구소</span>
-        </a>
+        </Link>
 
         <nav className="hidden md:flex items-center gap-6">
           {links.map((l) => (
@@ -42,8 +45,50 @@ export default function Navbar() {
         </nav>
 
         <div className="hidden md:flex items-center gap-3">
-          <a href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">로그인</a>
-          <Button size="sm" className="rounded-full px-5">무료 시작</Button>
+          {!loading && (
+            user ? (
+              <div className="relative">
+                <button
+                  onClick={() => setDropdownOpen(!dropdownOpen)}
+                  className="flex items-center gap-2 text-sm text-foreground hover:text-primary transition-colors"
+                >
+                  <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold text-sm">
+                    {(user.displayName ?? user.email ?? '?')[0].toUpperCase()}
+                  </div>
+                  <span className="max-w-[120px] truncate">{user.displayName ?? user.email}</span>
+                </button>
+                <AnimatePresence>
+                  {dropdownOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 8 }}
+                      className="absolute right-0 mt-2 w-44 bg-card rounded-xl border border-border shadow-lg overflow-hidden"
+                    >
+                      <Link href="/dashboard" className="block px-4 py-3 text-sm text-foreground hover:bg-muted transition-colors">
+                        대시보드
+                      </Link>
+                      <button
+                        onClick={() => { signOut(); setDropdownOpen(false); }}
+                        className="w-full text-left px-4 py-3 text-sm text-red-500 hover:bg-red-50 transition-colors"
+                      >
+                        로그아웃
+                      </button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            ) : (
+              <>
+                <Link href="/login" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                  로그인
+                </Link>
+                <Link href="/signup">
+                  <Button size="sm" className="rounded-full px-5">무료 시작</Button>
+                </Link>
+              </>
+            )
+          )}
         </div>
 
         <button className="md:hidden p-2 text-muted-foreground" onClick={() => setOpen(!open)}>
@@ -69,7 +114,21 @@ export default function Navbar() {
                   {l.label}
                 </a>
               ))}
-              <Button size="sm" className="mt-2 rounded-full w-full">무료 시작</Button>
+              {user ? (
+                <button
+                  onClick={() => { signOut(); setOpen(false); }}
+                  className="mt-2 text-sm text-red-500 text-left"
+                >
+                  로그아웃
+                </button>
+              ) : (
+                <>
+                  <Link href="/login" className="text-sm text-muted-foreground py-1" onClick={() => setOpen(false)}>로그인</Link>
+                  <Link href="/signup" onClick={() => setOpen(false)}>
+                    <Button size="sm" className="rounded-full w-full">무료 시작</Button>
+                  </Link>
+                </>
+              )}
             </div>
           </motion.div>
         )}
