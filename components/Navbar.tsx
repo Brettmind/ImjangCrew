@@ -53,9 +53,9 @@ export default function Navbar() {
                   className="flex items-center gap-2 text-sm text-foreground hover:text-primary transition-colors"
                 >
                   <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary font-semibold text-sm">
-                    {(user.displayName ?? user.email ?? '?')[0].toUpperCase()}
+                    {((user.user_metadata?.full_name ?? user.email ?? '?') as string)[0].toUpperCase()}
                   </div>
-                  <span className="max-w-[120px] truncate">{user.displayName ?? user.email}</span>
+                  <span className="max-w-[120px] truncate">{user.user_metadata?.full_name ?? user.email}</span>
                 </button>
                 <AnimatePresence>
                   {dropdownOpen && (
