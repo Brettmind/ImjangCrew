@@ -1,21 +1,48 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
+import { supabase } from '@/lib/supabase';
 import { DecisionBadge } from './decision-badge';
 import { StarRating } from '@/components/ui/star-rating';
 import type { ImjangLog } from '@/types/inspection-log';
 
 export function LogCard({ log }: { log: ImjangLog }) {
   const router = useRouter();
+  const [coverUrl, setCoverUrl] = useState<string | null>(null);
+
+  useEffect(() => {
+    supabase
+      .from('imjang_media')
+      .select('public_url')
+      .eq('log_id', log.id)
+      .eq('is_cover', true)
+      .single()
+      .then(({ data }) => { if (data) setCoverUrl((data as { public_url: string }).public_url); });
+  }, [log.id]);
 
   return (
     <motion.div
       whileHover={{ y: -2, boxShadow: '0 8px 24px rgba(0,0,0,0.08)' }}
       transition={{ duration: 0.15 }}
       onClick={() => router.push(`/dashboard/logs/${log.id}`)}
-      className="bg-card border border-border rounded-2xl p-5 cursor-pointer group"
+      className="bg-card border border-border rounded-2xl overflow-hidden cursor-pointer group"
     >
+      {/* 커버 이미지 */}
+      {coverUrl && (
+        <div className="relative h-36 overflow-hidden">
+          <Image
+            src={coverUrl}
+            alt={log.address}
+            fill
+            className="object-cover group-hover:scale-105 transition-transform duration-500"
+            unoptimized
+          />
+        </div>
+      )}
+      <div className="p-5">
       {/* 상단: 결정 배지 + 날짜 */}
       <div className="flex items-start justify-between mb-3">
         <DecisionBadge decision={log.decision} />
@@ -72,6 +99,7 @@ export function LogCard({ log }: { log: ImjangLog }) {
           <StarRating value={log.overall_score} readonly size="sm" />
         </div>
       )}
+      </div>
     </motion.div>
   );
 }

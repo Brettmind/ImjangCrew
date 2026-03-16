@@ -2,12 +2,20 @@
 
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { LogForm } from '@/components/dashboard/log-form';
 import type { ImjangLog } from '@/types/inspection-log';
 
 export default function NewLogPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const preData = (() => {
+    try {
+      const pre = searchParams.get('pre');
+      return pre ? JSON.parse(decodeURIComponent(pre)) : undefined;
+    } catch { return undefined; }
+  })();
 
   const handleSuccess = (log: ImjangLog) => {
     router.push(`/dashboard/logs/${log.id}`);
@@ -28,7 +36,7 @@ export default function NewLogPage() {
       </motion.div>
 
       <div className="bg-card border border-border rounded-2xl p-6 md:p-8">
-        <LogForm mode="create" onSuccess={handleSuccess} />
+        <LogForm mode="create" initialData={preData} onSuccess={handleSuccess} />
       </div>
     </div>
   );

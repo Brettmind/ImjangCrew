@@ -8,20 +8,38 @@ import { getLogById, deleteLog } from '@/lib/inspection-logs';
 import { LogForm } from '@/components/dashboard/log-form';
 import { DecisionBadge } from '@/components/dashboard/decision-badge';
 import { StarRating } from '@/components/ui/star-rating';
+import { CommentsSection } from '@/components/dashboard/comments-section';
+import { MediaGallery } from '@/components/dashboard/media-gallery';
+import { MediaUploader } from '@/components/dashboard/media-uploader';
+import { supabase } from '@/lib/supabase';
 import type { ImjangLog } from '@/types/inspection-log';
+
+interface MediaItem {
+  id: string;
+  public_url: string;
+  file_name: string;
+  file_type: string;
+  is_cover: boolean;
+  display_order: number;
+}
 
 export default function LogDetailPage() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
   const [log, setLog] = useState<ImjangLog | null>(null);
+  const [media, setMedia] = useState<MediaItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [isEditing, setIsEditing] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   useEffect(() => {
-    getLogById(id).then(({ data }) => {
-      setLog(data);
+    Promise.all([
+      getLogById(id),
+      supabase.from('imjang_media').select('*').eq('log_id', id).order('display_order'),
+    ]).then(([logRes, mediaRes]) => {
+      setLog(logRes.data);
+      setMedia((mediaRes.data as MediaItem[]) ?? []);
       setLoading(false);
     });
   }, [id]);
@@ -214,6 +232,33 @@ export default function LogDetailPage() {
               </div>
             )}
           </div>
+
+          {/* 미디어 갤러리 */}
+          {media.length > 0 ? (
+            <MediaGallery media={media} />
+          ) : (
+            <div className="bg-card border border-border rounded-2xl p-5">
+              <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
+                <svg className="w-4 h-4 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                미디어 업로드
+              </h3>
+              <MediaUploader logId={id} onChange={(updated) => {
+                setMedia(updated.map((m) => ({
+                  id: m.id ?? '',
+                  public_url: m.public_url,
+                  file_name: m.file_name,
+                  file_type: m.file_type,
+                  is_cover: m.is_cover,
+                  display_order: m.display_order,
+                })));
+              }} />
+            </div>
+          )}
+
+          {/* 댓글 */}
+          <CommentsSection logId={id} />
 
           {/* 작성일 */}
           <p className="text-xs text-muted-foreground text-right px-1">

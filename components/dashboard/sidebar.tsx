@@ -16,6 +16,16 @@ const navItems = [
     ),
   },
   {
+    label: '이주의 매물',
+    href: '/dashboard/listings',
+    icon: (
+      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" />
+      </svg>
+    ),
+    badge: 'LIVE',
+  },
+  {
     label: '임장로그',
     href: '/dashboard/logs',
     icon: (
@@ -77,6 +87,11 @@ export function Sidebar() {
           >
             {item.icon}
             {item.label}
+            {'badge' in item && item.badge && (
+              <span className="ml-auto text-[9px] font-bold bg-primary text-white px-1.5 py-0.5 rounded-full">
+                {item.badge}
+              </span>
+            )}
           </Link>
         ))}
       </nav>
