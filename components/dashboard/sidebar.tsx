@@ -16,7 +16,7 @@ const navItems = [
     ),
   },
   {
-    label: '이주의 매물',
+    label: '이주의 추천매물',
     href: '/dashboard/listings',
     icon: (
       <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

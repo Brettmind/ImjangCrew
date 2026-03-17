@@ -7,6 +7,28 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import type { Listing } from '@/app/api/listings/route';
 
+const DAY_LABELS: Record<number, { label: string; color: string }> = {
+  5: { label: '금요일', color: 'text-blue-600 bg-blue-50 border-blue-200' },
+  6: { label: '토요일', color: 'text-primary bg-primary/5 border-primary/20' },
+  0: { label: '일요일', color: 'text-purple-600 bg-purple-50 border-purple-200' },
+};
+
+function groupByDay(listings: Listing[]): { date: string; day: number; items: Listing[] }[] {
+  const map = new Map<string, Listing[]>();
+  for (const l of listings) {
+    if (!l.auctionDate) continue;
+    if (!map.has(l.auctionDate)) map.set(l.auctionDate, []);
+    map.get(l.auctionDate)!.push(l);
+  }
+  return Array.from(map.entries())
+    .map(([date, items]) => ({
+      date,
+      day: new Date(date + 'T00:00:00').getDay(),
+      items,
+    }))
+    .sort((a, b) => a.date.localeCompare(b.date));
+}
+
 function encodeLogDefaults(l: Listing) {
   return encodeURIComponent(JSON.stringify({
     address: l.address,
@@ -23,14 +45,6 @@ function encodeLogDefaults(l: Listing) {
   }));
 }
 
-function PropertyTypeIcon({ type }: { type: string }) {
-  return (
-    <span className="text-xs font-medium bg-muted text-muted-foreground px-2 py-0.5 rounded-full">
-      {type}
-    </span>
-  );
-}
-
 function ListingCard({ listing, index }: { listing: Listing; index: number }) {
   const router = useRouter();
   const [imgError, setImgError] = useState(false);
@@ -40,7 +54,7 @@ function ListingCard({ listing, index }: { listing: Listing; index: number }) {
     <motion.div
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.05 }}
+      transition={{ delay: index * 0.04 }}
       whileHover={{ y: -3, boxShadow: '0 12px 32px rgba(0,0,0,0.1)' }}
       className="bg-card border border-border rounded-2xl overflow-hidden group cursor-pointer"
     >
@@ -62,28 +76,31 @@ function ListingCard({ listing, index }: { listing: Listing; index: number }) {
             </svg>
           </div>
         )}
-        {/* 경매 배지 */}
         <div className="absolute top-3 left-3">
           <span className="bg-primary text-white text-xs font-bold px-2.5 py-1 rounded-full">
-            🔨 경매
+            🔨 Auction
           </span>
         </div>
         {listing.photos.length > 1 && (
           <div className="absolute bottom-3 right-3 bg-black/50 text-white text-xs px-2 py-0.5 rounded-full">
-            +{listing.photos.length - 1}장
+            +{listing.photos.length - 1}
           </div>
         )}
       </div>
 
       {/* 정보 */}
       <div className="p-4">
-        <div className="flex items-start justify-between gap-2 mb-1.5">
+        <div className="flex items-start justify-between gap-2 mb-1">
           <h3 className="text-sm font-semibold text-foreground leading-tight group-hover:text-primary transition-colors line-clamp-2 flex-1">
-            {listing.address || '주소 정보 없음'}
+            {listing.address || 'Address unavailable'}
           </h3>
-          <PropertyTypeIcon type={listing.propertyType} />
+          <span className="text-xs font-medium bg-muted text-muted-foreground px-2 py-0.5 rounded-full flex-shrink-0">
+            {listing.propertyType}
+          </span>
         </div>
-        <p className="text-xs text-muted-foreground mb-3">{listing.suburb}, {listing.state} {listing.postcode}</p>
+        <p className="text-xs text-muted-foreground mb-3">
+          {[listing.suburb, listing.state, listing.postcode].filter(Boolean).join(', ')}
+        </p>
 
         {/* 스펙 */}
         <div className="flex items-center gap-3 text-xs text-muted-foreground mb-3">
@@ -92,19 +109,23 @@ function ListingCard({ listing, index }: { listing: Listing; index: number }) {
           {listing.carSpaces != null && <span>🚗 {listing.carSpaces}</span>}
           {listing.landSize && <span>📐 {listing.landSize}</span>}
           {listing.priceGuide && (
-            <span className="ml-auto font-semibold text-foreground">{listing.priceGuide}</span>
+            <span className="ml-auto font-semibold text-foreground text-xs">{listing.priceGuide}</span>
           )}
         </div>
 
-        {/* 경매일 */}
-        {listing.auctionDate && (
+        {/* 경매 시간 */}
+        {listing.auctionTime && (
           <div className="flex items-center gap-1.5 text-xs text-amber-600 font-medium bg-amber-50 px-2.5 py-1.5 rounded-lg mb-3">
             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            경매 {new Date(listing.auctionDate + 'T00:00:00').toLocaleDateString('ko-KR', { month: 'long', day: 'numeric', weekday: 'short' })}
-            {listing.auctionTime && ` ${listing.auctionTime}`}
+            {listing.auctionTime}
+            {listing.auctionLocation && ` · ${listing.auctionLocation}`}
           </div>
+        )}
+
+        {listing.agencyName && (
+          <p className="text-xs text-muted-foreground mb-3 truncate">🏢 {listing.agencyName}</p>
         )}
 
         {/* 버튼 */}
@@ -121,11 +142,33 @@ function ListingCard({ listing, index }: { listing: Listing; index: number }) {
             rel="noopener noreferrer"
             className="px-3 py-2 border border-border text-xs font-medium text-muted-foreground rounded-xl hover:text-foreground hover:border-primary/50 transition-colors"
           >
-            원문 ↗
+            상세 ↗
           </a>
         </div>
       </div>
     </motion.div>
+  );
+}
+
+function DayGroup({ group, globalIndex }: { group: { date: string; day: number; items: Listing[] }; globalIndex: number }) {
+  const style = DAY_LABELS[group.day] ?? { label: '경매', color: 'text-foreground bg-muted border-border' };
+  const dateLabel = new Date(group.date + 'T00:00:00').toLocaleDateString('ko-KR', {
+    month: 'long', day: 'numeric',
+  });
+
+  return (
+    <div className="mb-10">
+      <div className={`inline-flex items-center gap-2 px-4 py-1.5 rounded-full border text-sm font-bold mb-5 ${style.color}`}>
+        <span>{style.label}</span>
+        <span className="font-normal opacity-70">{dateLabel}</span>
+        <span className="ml-1 text-xs font-normal opacity-60">{group.items.length}건</span>
+      </div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        {group.items.map((l, i) => (
+          <ListingCard key={l.id} listing={l} index={globalIndex + i} />
+        ))}
+      </div>
+    </div>
   );
 }
 
@@ -145,19 +188,22 @@ export default function ListingsPage() {
       .catch(() => { setSource('error'); setLoading(false); });
   }, []);
 
+  const groups = groupByDay(listings);
+  let cardIndex = 0;
+
   return (
     <div>
       {/* 헤더 */}
       <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="mb-6">
         <div className="flex items-start justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-foreground">이주의 Brisbane 경매</h1>
+            <h1 className="text-2xl font-bold text-foreground">이주의 추천매물</h1>
             <p className="text-sm text-muted-foreground mt-0.5">
-              realestate.com.au 실시간 경매 매물
+              Brisbane 이번 주말 경매 예정 매물 · Domain.com.au
             </p>
           </div>
           <a
-            href="https://www.realestate.com.au/auction/brisbane/list-1"
+            href="https://www.domain.com.au/auction-results/brisbane/"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-1.5 px-4 py-2 border border-border rounded-xl text-sm text-muted-foreground hover:text-foreground hover:border-primary/50 transition-colors"
@@ -165,12 +211,12 @@ export default function ListingsPage() {
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
             </svg>
-            realestate.com.au
+            domain.com.au
           </a>
         </div>
       </motion.div>
 
-      {/* 상태 배너 */}
+      {/* 에러 배너 */}
       <AnimatePresence>
         {!loading && source !== 'live' && (
           <motion.div
@@ -183,13 +229,12 @@ export default function ListingsPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
               </svg>
               <div>
-                <p className="text-sm font-medium text-amber-800">실시간 데이터 연결 불가</p>
+                <p className="text-sm font-medium text-amber-800">Domain API 연결 필요</p>
                 <p className="text-xs text-amber-700 mt-0.5">
-                  realestate.com.au가 자동 접근을 차단하고 있어요.{' '}
-                  <a href="https://www.realestate.com.au/auction/brisbane/list-1" target="_blank" rel="noopener noreferrer" className="underline font-medium">
-                    직접 방문해서 매물을 확인하고
+                  <a href="https://developer.domain.com.au" target="_blank" rel="noopener noreferrer" className="underline font-medium">
+                    developer.domain.com.au
                   </a>
-                  {' '}아래 "임장로그 직접 작성"으로 기록하세요.
+                  에서 API 키를 발급받아 <code className="bg-amber-100 px-1 rounded">DOMAIN_API_KEY</code> 환경변수에 추가하세요.
                 </p>
               </div>
             </div>
@@ -210,33 +255,33 @@ export default function ListingsPage() {
             </div>
           ))}
         </div>
-      ) : listings.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-          {listings.map((l, i) => <ListingCard key={l.id} listing={l} index={i} />)}
+      ) : groups.length > 0 ? (
+        <div>
+          {groups.map((group) => {
+            const start = cardIndex;
+            cardIndex += group.items.length;
+            return <DayGroup key={group.date} group={group} globalIndex={start} />;
+          })}
         </div>
       ) : (
-        /* 폴백 UI */
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="bg-card border border-border rounded-2xl p-8">
           <div className="text-center mb-8">
             <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
               <span className="text-3xl">🏠</span>
             </div>
-            <h3 className="text-lg font-semibold text-foreground mb-2">Brisbane 이주의 경매 매물</h3>
+            <h3 className="text-lg font-semibold text-foreground mb-2">이번 주말 경매 매물</h3>
             <p className="text-sm text-muted-foreground max-w-sm mx-auto">
-              아래 버튼으로 realestate.com.au에서 매물을 확인한 뒤, 직접 임장로그를 작성하세요.
+              Domain API 키를 설정하면 이번 주 금·토·일 경매 예정 매물이 자동으로 표시됩니다.
             </p>
           </div>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <a
-              href="https://www.realestate.com.au/auction/brisbane/list-1"
+              href="https://developer.domain.com.au"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center justify-center gap-2 px-6 py-3 bg-primary text-white font-semibold rounded-xl hover:bg-primary/90 transition-colors"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-              </svg>
-              realestate.com.au에서 매물 보기
+              API 키 발급받기 ↗
             </a>
             <Link
               href="/dashboard/logs/new"
