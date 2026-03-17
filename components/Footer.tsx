@@ -1,3 +1,5 @@
+import Link from 'next/link';
+
 const Footer = () => (
   <footer className="bg-muted/40 border-t border-border px-6 py-16">
     <div className="container mx-auto">
@@ -32,9 +34,9 @@ const Footer = () => (
       <div className="pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4">
         <p className="text-muted-foreground text-xs">© 2025 임장연구소. All rights reserved.</p>
         <div className="flex gap-6">
-          {['이용약관', '개인정보처리방침', '쿠키 정책'].map((l) => (
-            <a key={l} href="#" className="text-muted-foreground text-xs hover:text-foreground transition-colors">{l}</a>
-          ))}
+          <Link href="/terms" className="text-muted-foreground text-xs hover:text-foreground transition-colors">이용약관</Link>
+          <Link href="/privacy" className="text-muted-foreground text-xs hover:text-foreground transition-colors">개인정보처리방침</Link>
+          <a href="#" className="text-muted-foreground text-xs hover:text-foreground transition-colors">쿠키 정책</a>
         </div>
       </div>
     </div>
