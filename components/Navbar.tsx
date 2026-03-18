@@ -115,12 +115,17 @@ export default function Navbar() {
                 </a>
               ))}
               {user ? (
-                <button
-                  onClick={() => { signOut(); setOpen(false); }}
-                  className="mt-2 text-sm text-red-500 text-left"
-                >
-                  로그아웃
-                </button>
+                <>
+                  <Link href="/dashboard" className="text-sm text-foreground font-medium py-1" onClick={() => setOpen(false)}>
+                    대시보드
+                  </Link>
+                  <button
+                    onClick={() => { signOut(); setOpen(false); }}
+                    className="mt-1 text-sm text-red-500 text-left"
+                  >
+                    로그아웃
+                  </button>
+                </>
               ) : (
                 <>
                   <Link href="/login" className="text-sm text-muted-foreground py-1" onClick={() => setOpen(false)}>로그인</Link>
