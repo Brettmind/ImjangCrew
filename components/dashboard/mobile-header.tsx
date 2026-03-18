@@ -17,7 +17,7 @@ export function MobileHeader() {
         <div className="flex items-center gap-2">
           <Link
             href="/dashboard/logs/new"
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-primary text-white text-sm font-medium rounded-lg"
+            className="flex items-center gap-1.5 px-4 py-2 bg-primary text-white text-sm font-medium rounded-lg min-h-[40px]"
           >
             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -26,7 +26,7 @@ export function MobileHeader() {
           </Link>
           <button
             onClick={async () => { await signOut(); router.push('/'); }}
-            className="p-2 text-muted-foreground hover:text-red-500 transition-colors"
+            className="p-3 text-muted-foreground hover:text-red-500 transition-colors"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />

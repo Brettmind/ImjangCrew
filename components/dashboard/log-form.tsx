@@ -157,7 +157,7 @@ export function LogForm({ mode, initialData, onSuccess }: LogFormProps) {
             <label className={labelCls}>주소 <span className="text-red-500">*</span></label>
             <input className={inputCls} placeholder="123 Example St, Brisbane QLD 4000" value={form.address} onChange={(e) => set('address', e.target.value)} />
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className={labelCls}>지역 (Suburb) <span className="text-red-500">*</span></label>
               <input className={inputCls} placeholder="Chermside" value={form.suburb} onChange={(e) => set('suburb', e.target.value)} />
@@ -183,7 +183,7 @@ export function LogForm({ mode, initialData, onSuccess }: LogFormProps) {
               <input type="number" min="0" max="10" className={inputCls} placeholder="1" value={form.car_spaces} onChange={(e) => set('car_spaces', e.target.value)} />
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className={labelCls}>토지면적 (㎡)</label>
               <input type="number" className={inputCls} placeholder="405" value={form.land_size_sqm} onChange={(e) => set('land_size_sqm', e.target.value)} />
@@ -193,7 +193,7 @@ export function LogForm({ mode, initialData, onSuccess }: LogFormProps) {
               <input className={inputCls} placeholder="$850k – $900k" value={form.price_guide} onChange={(e) => set('price_guide', e.target.value)} />
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className={labelCls}>경매일</label>
               <input type="date" className={inputCls} value={form.auction_date} onChange={(e) => set('auction_date', e.target.value)} />
@@ -269,7 +269,7 @@ export function LogForm({ mode, initialData, onSuccess }: LogFormProps) {
           </div>
 
           {/* 투자 분석 */}
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className={labelCls}>예상 임대료 (주/AUD)</label>
               <div className="relative">

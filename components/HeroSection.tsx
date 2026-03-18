@@ -99,7 +99,7 @@ const HeroSection = ({ title, subtitle, actions, stats, images, className }: Her
 
         {/* Right Column: Image Collage */}
         <motion.div
-          className="relative h-[400px] w-full sm:h-[500px]"
+          className="relative h-[280px] w-full sm:h-[400px] lg:h-[500px]"
           variants={containerVariants}
           initial="hidden"
           animate="visible"
@@ -125,19 +125,19 @@ const HeroSection = ({ title, subtitle, actions, stats, images, className }: Her
 
           {/* Images */}
           <motion.div
-            className="absolute left-1/2 top-0 h-48 w-48 -translate-x-1/2 rounded-2xl bg-muted p-2 shadow-lg sm:h-64 sm:w-64"
+            className="absolute left-1/2 top-0 h-32 w-32 -translate-x-1/2 rounded-2xl bg-muted p-2 shadow-lg sm:h-48 sm:w-48 lg:h-64 lg:w-64"
             variants={imageVariants}
           >
             <img src={images[0]} alt="임장 현장" className="h-full w-full rounded-xl object-cover" />
           </motion.div>
           <motion.div
-            className="absolute right-0 top-1/3 h-40 w-40 rounded-2xl bg-muted p-2 shadow-lg sm:h-56 sm:w-56"
+            className="absolute right-0 top-1/3 h-28 w-28 rounded-2xl bg-muted p-2 shadow-lg sm:h-40 sm:w-40 lg:h-56 lg:w-56"
             variants={imageVariants}
           >
             <img src={images[1]} alt="임장 리포트" className="h-full w-full rounded-xl object-cover" />
           </motion.div>
           <motion.div
-            className="absolute bottom-0 left-0 h-32 w-32 rounded-2xl bg-muted p-2 shadow-lg sm:h-48 sm:w-48"
+            className="absolute bottom-0 left-0 h-24 w-24 rounded-2xl bg-muted p-2 shadow-lg sm:h-32 sm:w-32 lg:h-48 lg:w-48"
             variants={imageVariants}
           >
             <img src={images[2]} alt="임장 데이터" className="h-full w-full rounded-xl object-cover" />

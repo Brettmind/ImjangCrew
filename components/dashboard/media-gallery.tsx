@@ -80,7 +80,7 @@ export function MediaGallery({ media }: { media: MediaItem[] }) {
 
           {/* 나머지 썸네일 */}
           {rest.length > 0 && (
-            <div className="grid grid-cols-4 gap-2">
+            <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
               {rest.slice(0, 7).map((item, i) => {
                 const isLast = i === 6 && rest.length > 7;
                 return (
